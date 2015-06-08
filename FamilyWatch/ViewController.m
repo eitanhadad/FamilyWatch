@@ -28,6 +28,9 @@
     
     self.locationManager.delegate = self;
     self.location = [[CLLocation alloc] init];
+    NSEnumerator* histEnum = [[NSEnumerator alloc] init];
+    
+    _history = [[MotionHistory alloc] init];
     
     [self.locationManager startUpdatingLocation];
 }
@@ -51,8 +54,45 @@
     //self.timestamp.text = [NSString stringWithFormat:@"%@", self.location.timestamp];
     self.speed.text = [NSString stringWithFormat:@"%f", self.location.speed];
     //self.course.text = [NSString stringWithFormat:@"%f", self.location.course];
+    
+    if (self.location.speed == 0)
+    {
+        if(self.history.isAutomative)
+            [self setupLocalNotifications];
+            
+            
+    }
     NSLog(@"%@", self.location.description);
     
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self setupLocalNotifications];
+}
+
+
+
+- (void)setupLocalNotifications {
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    
+    // current time plus 0 secs
+    NSDate *now = [NSDate date];
+    NSDate *dateToFire = [now dateByAddingTimeInterval:0];
+    
+    NSLog(@"now time: %@", now);
+    NSLog(@"fire time: %@", dateToFire);
+    
+    localNotification.fireDate = dateToFire;
+    localNotification.alertBody = @"Time to get up!";
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber = 1; // increment
+    
+    NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
+    localNotification.userInfo = infoDict;
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 
 @end

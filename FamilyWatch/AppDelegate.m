@@ -16,6 +16,22 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    
+    
+    UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    
+    if (notification) {
+        [self showAlarm:notification.alertBody];
+        NSLog(@"AppDelegate didFinishLaunchingWithOptions");
+        application.applicationIconBadgeNumber = 0;
+    }
+    
+    [self.window makeKeyAndVisible];
+    
+    
+    
+    
     // Override point for customization after application launch.
     return YES;
 }
@@ -40,6 +56,24 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    [self showAlarm:notification.alertBody];
+    application.applicationIconBadgeNumber = 0;
+    NSLog(@"AppDelegate didReceiveLocalNotification %@", notification.userInfo);
+}
+
+/**
+ Present alarm
+ **/
+
+- (void)showAlarm:(NSString *)text {
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alarm"
+                                                        message:text delegate:nil
+                                              cancelButtonTitle:@"Ignore"
+                                              otherButtonTitles:@"Thank You", nil];
+    [alertView show];
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MotionHistory.h"
 
 @interface ViewController : UIViewController <CLLocationManagerDelegate>
 
@@ -17,6 +18,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
 
 @property (strong, nonatomic) IBOutlet UILabel *speed;
+@property MotionHistory *history;
 
 @end
 
