@@ -11,8 +11,6 @@
 @interface MotionHistory()
 
 
-- (void) setHistoryEnum:(NSEnumerator*)histEnum;
-
 @end
 
 @implementation MotionHistory
@@ -24,7 +22,7 @@
     self = [super init];
     if(self)
     {
-        _historyEnum = [[NSEnumerator alloc] init];
+        _historyArray = [[NSMutableArray alloc] init];
     }
     
     
@@ -39,5 +37,17 @@
     return result;
     
 }
+
+- (BOOL) isSpeedChanged
+{
+    return true;
+}
+            
+            
+- (void) addMotion:(double)speed
+{
+    
+}
+
 
 @end

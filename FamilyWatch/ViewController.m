@@ -10,6 +10,8 @@
 
 @interface ViewController ()
 
+@property NSMutableArray *arr;
+
 @end
 
 @implementation ViewController
@@ -28,7 +30,9 @@
     
     self.locationManager.delegate = self;
     self.location = [[CLLocation alloc] init];
-    NSEnumerator* histEnum = [[NSEnumerator alloc] init];
+    _arr = [[NSMutableArray alloc] init];
+    [self.arr addObject:self];
+    
     
     _history = [[MotionHistory alloc] init];
     
@@ -57,9 +61,18 @@
     
     if (self.location.speed == 0)
     {
+        [WatchNotificationAgent setIsMoving:(BOOL*)false];
         if(self.history.isAutomative)
-            [self setupLocalNotifications];
+        {
+            [NSThread detachNewThreadSelector:@selector(NotificationAgentExec:) toTarget:[WatchNotificationAgent class] withObject:self.arr];
+        }
+        else
+        {
+            [WatchNotificationAgent setIsMoving:(BOOL*)true];
             
+            
+        }
+        
             
     }
     NSLog(@"%@", self.location.description);

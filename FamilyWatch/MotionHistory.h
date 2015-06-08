@@ -10,10 +10,12 @@
 
 @interface MotionHistory : NSObject
 
-@property NSEnumerator *historyEnum;
+@property NSMutableArray *historyArray;
 
 - (BOOL) isAutomative;
-- (id)init;
+- (id) init;
+- (BOOL) isSpeedChanged;
+- (void) addMotion:(double)speed;
 
 
 @end

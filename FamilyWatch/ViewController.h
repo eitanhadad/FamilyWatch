@@ -9,16 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MotionHistory.h"
+#import "WatchNotificationAgent.h"
 
 @interface ViewController : UIViewController <CLLocationManagerDelegate>
 
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
+- (void)setupLocalNotifications;
+
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *location;
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations;
+@property MotionHistory *history;
 
 @property (strong, nonatomic) IBOutlet UILabel *speed;
-@property MotionHistory *history;
+
 
 @end
 
