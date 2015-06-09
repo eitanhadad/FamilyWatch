@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ViewController.h"
 
-@interface WatchNotificationAgent : NSObject
+@interface WatchNotificationAgent : NSThread
 
 + (void) NotificationAgentExec:(NSMutableArray*) arr;
 + (void) setIsMoving:(BOOL*) val;

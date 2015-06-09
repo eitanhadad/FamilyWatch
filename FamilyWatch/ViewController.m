@@ -11,6 +11,7 @@
 @interface ViewController ()
 
 @property NSMutableArray *arr;
+@property double lastRecordedSpeed;
 
 @end
 
@@ -59,22 +60,27 @@
     self.speed.text = [NSString stringWithFormat:@"%f", self.location.speed];
     //self.course.text = [NSString stringWithFormat:@"%f", self.location.course];
     
+    
+    
     if (self.location.speed == 0)
     {
-        [WatchNotificationAgent setIsMoving:(BOOL*)false];
-        if(self.history.isAutomative)
+        if(self.lastRecordedSpeed != 0)
         {
-            [NSThread detachNewThreadSelector:@selector(NotificationAgentExec:) toTarget:[WatchNotificationAgent class] withObject:self.arr];
-        }
-        else
-        {
-            [WatchNotificationAgent setIsMoving:(BOOL*)true];
-            
-            
+            self.lastRecordedSpeed = 0;
+            [WatchNotificationAgent setIsMoving:(BOOL*)false];
+            if(self.history.isAutomative)
+            {
+                [NSThread detachNewThreadSelector:@selector(NotificationAgentExec:) toTarget:[WatchNotificationAgent class] withObject:self.arr];
+            }
+            else
+            {
+                [WatchNotificationAgent setIsMoving:(BOOL*)true];
+            }
         }
         
             
     }
+    self.lastRecordedSpeed = self.location.speed;
     NSLog(@"%@", self.location.description);
     
 }

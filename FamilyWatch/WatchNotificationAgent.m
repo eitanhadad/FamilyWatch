@@ -19,7 +19,7 @@ static BOOL *isMoving;
     
     while (! isMoving) {
         [currentViewParent setupLocalNotifications];
-        usleep(10000);
+        usleep(10000000);
     
     }
 
