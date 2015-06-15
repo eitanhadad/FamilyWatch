@@ -11,8 +11,10 @@
 @interface MotionHistory : NSObject
 
 @property NSMutableArray *historyArray;
+@property NSString *state;
 
 - (BOOL) isAutomative;
+- (BOOL) isState:(NSString*)paramState;
 - (id) init;
 - (BOOL) isSpeedChanged;
 - (void) addMotion:(double)speed;

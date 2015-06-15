@@ -17,11 +17,10 @@ static BOOL *isMoving;
 {
     ViewController *currentViewParent = arr.firstObject;
     
-    while (! isMoving) {
-        [currentViewParent setupLocalNotifications];
-        usleep(10000000);
-    
-    }
+    while ([currentViewParent.history.state  isEqual: @"IDLE"]) {
+            [currentViewParent setupLocalNotifications];
+            usleep(10000000);
+        }
 
     
 }

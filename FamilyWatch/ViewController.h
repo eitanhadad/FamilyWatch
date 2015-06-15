@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "MotionHistory.h"
 #import "WatchNotificationAgent.h"
+#import "AVFoundation/AVFoundation.h"
 
 @interface ViewController : UIViewController <CLLocationManagerDelegate>
 
@@ -19,6 +20,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocation *location;
 @property MotionHistory *history;
+@property (strong, nonatomic) AVSpeechSynthesizer *synthesizer;
 
 @property (strong, nonatomic) IBOutlet UILabel *speed;
 

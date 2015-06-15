@@ -33,6 +33,18 @@
     
     [self.window makeKeyAndVisible];
     
+    NSError *error = NULL;
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback error:&error];
+    if(error) {
+        // Do some error handling
+    }
+    [session setActive:YES error:&error];
+    if (error) {
+        // Do some error handling
+    }
+
+    
     
     
     
@@ -78,6 +90,7 @@
                                               cancelButtonTitle:@"Ignore"
                                               otherButtonTitles:@"Thank You", nil];
     [alertView show];
+    
 }
 
 @end

@@ -12,6 +12,9 @@
 
 @property NSMutableArray *arr;
 @property double lastRecordedSpeed;
+@property NSDate* lastTimeStamp;
+@property NSThread *watchNotificationThread;
+- (void)makeSoundAlert:(NSString*)text speechRate:(double) rate;
 
 @end
 
@@ -36,6 +39,7 @@
     
     
     _history = [[MotionHistory alloc] init];
+    self.synthesizer = [[AVSpeechSynthesizer alloc] init];
     
     [self.locationManager startUpdatingLocation];
 }
@@ -61,8 +65,52 @@
     //self.course.text = [NSString stringWithFormat:@"%f", self.location.course];
     
     
+    //Driving
+    if(self.location.speed > 1) //5
+    {
+        self.history.state = @"DRIVING";
+        
+    }
+    //Getting ready to stop car, running, walking or idle
+    else if(self.location.speed < 1)
+    {
+        //Car was driving and slowed down
+        if([self.history.state  isEqual: @"DRIVING"])
+           {
+               // Moving very slowly - IDLE START
+               if(self.location.speed < 0.5)
+               {
+                   
+                   // taking note of the timestamp when we first hit the IDLE state
+                   if(!self.lastTimeStamp)
+                       self.lastTimeStamp = self.location.timestamp;
+                   
+                   NSTimeInterval diff = [self.location.timestamp timeIntervalSinceDate:self.lastTimeStamp];
+                   // It's not the traffic light we are waiting on... I don't think it's a traffic jam either
+                   if( diff > 180 )
+                   {
+                       self.history.state = @"IDLE";
+                       self.watchNotificationThread = [[NSThread alloc] initWithTarget:[WatchNotificationAgent class] selector:@selector(NotificationAgentExec:) object:self.arr];
+                       [self.watchNotificationThread start];
+                       NSLog(@"%@", self.location.description);
+                   }
+                   
+               }
+               // if speed is higher than 0.5 set lastTimeStamp to currentTimeStamp
+               else
+               {
+                   if(!self.lastTimeStamp)
+                       self.lastTimeStamp = self.location.timestamp;
+                   self.history.state = @"DRIVING";
+                   
+               }
+               
+           }
+        
+        
+    }
     
-    if (self.location.speed == 0)
+  /**  if (self.location.speed == 0)
     {
         if(self.lastRecordedSpeed != 0)
         {
@@ -83,10 +131,23 @@
     self.lastRecordedSpeed = self.location.speed;
     NSLog(@"%@", self.location.description);
     
+   **/
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self setupLocalNotifications];
+    [self makeSoundAlert: @"RideFamilyWatch is now online" speechRate:0.05];
+}
+
+
+
+
+- (void)makeSoundAlert:(NSString*)text speechRate:(double) rate
+{
+    AVSpeechUtterance *utterance = [AVSpeechUtterance speechUtteranceWithString:text];
+    utterance.rate = rate;
+    utterance.voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-au"];
+    [self.synthesizer speakUtterance:utterance];
+    
 }
 
 
@@ -104,14 +165,15 @@
     NSLog(@"fire time: %@", dateToFire);
     
     localNotification.fireDate = dateToFire;
-    localNotification.alertBody = @"Time to get up!";
-    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.alertBody = @"Wait, Before you leave the car please make sure you have not forgotten anyone";
+    //localNotification.soundName = UILocalNotificationDefaultSoundName;
     localNotification.applicationIconBadgeNumber = 1; // increment
     
     NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
     localNotification.userInfo = infoDict;
     
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    [self makeSoundAlert:@"Wait, Before you leave the car please make sure you have not forgotten anyone" speechRate:0.05];
 }
 
 @end

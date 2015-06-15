@@ -8,6 +8,8 @@
 
 #import "MotionHistory.h"
 
+static NSString* IDLE = @"IDLE";
+
 @interface MotionHistory()
 
 
@@ -23,6 +25,7 @@
     if(self)
     {
         _historyArray = [[NSMutableArray alloc] init];
+        self.state = nil;
     }
     
     
@@ -38,6 +41,17 @@
     
 }
 
+/**
+ checks the state property of the MotionHistory
+ **/
+
+- (BOOL) isState:(NSString*)paramState
+{
+    return self.state == paramState;
+}
+
+
+
 - (BOOL) isSpeedChanged
 {
     return true;
@@ -48,6 +62,8 @@
 {
     
 }
+
+
 
 
 @end
