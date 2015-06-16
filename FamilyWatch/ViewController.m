@@ -65,6 +65,9 @@
     //self.course.text = [NSString stringWithFormat:@"%f", self.location.course];
     
     
+    
+    
+    
     //Driving
     if(self.location.speed > 1) //5
     {
