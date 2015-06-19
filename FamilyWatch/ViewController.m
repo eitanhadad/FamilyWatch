@@ -20,8 +20,10 @@
 
 @implementation ViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.locationManager = [[CLLocationManager alloc] init];
     
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
@@ -69,7 +71,7 @@
     
     
     //Driving
-    if(self.location.speed > 1) //5
+    if(self.location.speed > 5)
     {
         self.history.state = @"DRIVING";
         
@@ -138,7 +140,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self makeSoundAlert: @"RideFamilyWatch is now online" speechRate:0.05];
+    [self makeSoundAlert: @"FamilyRideWatch is now online" speechRate:0.05];
 }
 
 
