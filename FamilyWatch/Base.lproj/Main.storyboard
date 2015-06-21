@@ -61,7 +61,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="maN-ee-7dZ" kind="show" id="khP-Py-adt"/>
+                                    <segue destination="maN-ee-7dZ" kind="show" identifier="ShowSettingsAttributes" id="khP-Py-adt"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -71,6 +71,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="FRW Configuration" id="ZdG-wM-l6M"/>
+                    <connections>
+                        <outlet property="tableView" destination="jSB-1k-1GW" id="i3I-ar-PmB"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L4U-KP-QR3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -79,7 +82,7 @@
         <!--FRW Settings-->
         <scene sceneID="Yqd-EN-VIa">
             <objects>
-                <viewController id="maN-ee-7dZ" sceneMemberID="viewController">
+                <viewController id="maN-ee-7dZ" customClass="ConfigAttributesViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="zUh-6X-SrK"/>
                         <viewControllerLayoutGuide type="bottom" id="kzc-Hz-RqW"/>
@@ -89,21 +92,23 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z3w-39-qSl">
-                                <rect key="frame" x="53" y="95" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="14" y="95" width="101" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R05-n6-uxf">
-                                <rect key="frame" x="408" y="95" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gvj-hw-j5c">
+                                <rect key="frame" x="127" y="91" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="FRW Settings" id="Lcz-9Q-he4"/>
+                    <connections>
+                        <outlet property="settingLabel" destination="z3w-39-qSl" id="xOV-fN-bsS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H0X-RB-xnq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

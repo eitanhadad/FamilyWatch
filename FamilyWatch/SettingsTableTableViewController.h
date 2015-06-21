@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ConfigAttributesViewController.h"
 
 @interface SettingsTableTableViewController : UITableViewController
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end
