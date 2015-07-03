@@ -32,6 +32,15 @@
         [self.locationManager requestAlwaysAuthorization];
         // Or [self.locationManager requestWhenInUseAuthorization];
     }
+    
+    
+    
+    UIImageView *backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background"]];
+    [self.view addSubview:backgroundView];
+    
+    
+    
+    
     // Do any additional setup after loading the view, typically from a nib.
     
     self.locationManager.delegate = self;
@@ -94,6 +103,8 @@
                    // It's not the traffic light we are waiting on... I don't think it's a traffic jam either
                    if( diff > 180 )
                    {
+                       // resetting lastTimeStamp
+                       self.lastTimeStamp = nil;
                        self.history.state = @"IDLE";
                        self.watchNotificationThread = [[NSThread alloc] initWithTarget:[WatchNotificationAgent class] selector:@selector(NotificationAgentExec:) object:self.arr];
                        [self.watchNotificationThread start];
@@ -104,8 +115,7 @@
                // if speed is higher than 0.5 set lastTimeStamp to currentTimeStamp
                else
                {
-                   if(!self.lastTimeStamp)
-                       self.lastTimeStamp = self.location.timestamp;
+                   self.lastTimeStamp = self.location.timestamp;
                    self.history.state = @"DRIVING";
                    
                }
@@ -179,6 +189,20 @@
     
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     [self makeSoundAlert:@"Wait, Before you leave the car please make sure you have not forgotten anyone" speechRate:0.05];
+}
+
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSLog(@"Button Index =%ld",(long)buttonIndex);
+    if (buttonIndex == 0)
+    {
+        NSLog(@"You have clicked Cancel");
+    }
+    else if(buttonIndex == 1)
+    {
+        NSLog(@"You have clicked GOO");
+    }
 }
 
 @end
