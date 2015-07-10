@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+static BOOL *carAudioActivated;
+
 @interface ViewController ()
 
 @property NSMutableArray *arr;
@@ -23,6 +25,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    carAudioActivated = false;
     
     self.locationManager = [[CLLocationManager alloc] init];
     
@@ -31,7 +34,25 @@
     if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
         [self.locationManager requestAlwaysAuthorization];
         // Or [self.locationManager requestWhenInUseAuthorization];
+        
+        /** --> Bluetooth Device managemnet
+        
+        self.bluetoothManager = [[CBCentralManager alloc] initWithDelegate:self
+                                                                 queue:nil
+                                                               options:[NSDictionary dictionaryWithObject:[NSNumber numberWithInt:0]
+                                                                                                   forKey:CBCentralManagerOptionShowPowerAlertKey]];
+         **/
+        
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(myInterruptionSelector:)
+                                                 name:AVAudioSessionInterruptionNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(myRouteChangeSelector:)
+                                                 name:AVAudioSessionRouteChangeNotification
+                                               object:nil];
     
     
     
@@ -53,6 +74,7 @@
     self.synthesizer = [[AVSpeechSynthesizer alloc] init];
     
     [self.locationManager startUpdatingLocation];
+  //  [self listAvailableInputs];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -64,6 +86,9 @@
 
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    
+    if(carAudioActivated)
+        return;
     
     self.location = locations.lastObject;
     //self.coordinateLat.text = [NSString stringWithFormat:@"%f", self.location.coordinate.latitude];
@@ -83,6 +108,7 @@
     if(self.location.speed > 5)
     {
         self.history.state = @"DRIVING";
+        self.lastTimeStamp = nil;
         
     }
     //Getting ready to stop car, running, walking or idle
@@ -92,7 +118,7 @@
         if([self.history.state  isEqual: @"DRIVING"])
            {
                // Moving very slowly - IDLE START
-               if(self.location.speed < 0.5)
+               if(self.location.speed < 0.8)
                {
                    
                    // taking note of the timestamp when we first hit the IDLE state
@@ -125,28 +151,6 @@
         
     }
     
-  /**  if (self.location.speed == 0)
-    {
-        if(self.lastRecordedSpeed != 0)
-        {
-            self.lastRecordedSpeed = 0;
-            [WatchNotificationAgent setIsMoving:(BOOL*)false];
-            if(self.history.isAutomative)
-            {
-                [NSThread detachNewThreadSelector:@selector(NotificationAgentExec:) toTarget:[WatchNotificationAgent class] withObject:self.arr];
-            }
-            else
-            {
-                [WatchNotificationAgent setIsMoving:(BOOL*)true];
-            }
-        }
-        
-            
-    }
-    self.lastRecordedSpeed = self.location.speed;
-    NSLog(@"%@", self.location.description);
-    
-   **/
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -192,16 +196,115 @@
 }
 
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+
+/** --> Bluetooth Management
+
+#pragma mark - CBCentralManagerDelegate
+
+- (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
-    NSLog(@"Button Index =%ld",(long)buttonIndex);
-    if (buttonIndex == 0)
+    // This delegate method will monitor for any changes in bluetooth state and respond accordingly
+    NSString *stateString = nil;
+    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], CBCentralManagerScanOptionAllowDuplicatesKey, nil];
+    switch(self.bluetoothManager.state)
     {
-        NSLog(@"You have clicked Cancel");
+        case CBCentralManagerStateResetting: stateString = @"The connection with the system service was momentarily lost, update imminent."; break;
+        case CBCentralManagerStateUnsupported: stateString = @"The platform doesn't support Bluetooth Low Energy."; break;
+        case CBCentralManagerStateUnauthorized: stateString = @"The app is not authorized to use Bluetooth Low Energy."; break;
+        case CBCentralManagerStatePoweredOff: stateString = @"Bluetooth is currently powered off."; break;
+        case CBCentralManagerStatePoweredOn: stateString = @"Bluetooth is currently powered on and available to use.";
+            [self.bluetoothManager scanForPeripheralsWithServices:nil options:options];
+            
+            
+            NSLog(@"Scanning started");
+            break;
+        default: stateString = @"State unknown, update imminent."; break;
+            
     }
-    else if(buttonIndex == 1)
+    NSLog(@"Bluetooth State: %@",stateString);
+}
+
+
+
+- (void)centralManager:(CBCentralManager *)central
+ didDiscoverPeripheral:(CBPeripheral *)peripheral
+     advertisementData:(NSDictionary *)advertisementData
+                  RSSI:(NSNumber *)RSSI {
+    
+    NSLog(@"Discovered %@", peripheral.name);
+    NSLog(@"Description Is %@", advertisementData.description);
+    //NSLog(@"Discovered %@", peripheral.UUID);
+}
+
+**/
+
+- (id)init
+{
+    self = [super init];
+    
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(myInterruptionSelector:)
+                                                     name:AVAudioSessionInterruptionNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(myRouteChangeSelector:)
+                                                     name:AVAudioSessionRouteChangeNotification
+                                                   object:nil];
+    }
+    return self;
+}
+
+
+
+/**
+ IOS 7.x +
+ **/
+
+- (void)listAvailableInputs
+{
+    // portDesc.portType could be for example - BluetoothHFP, MicrophoneBuiltIn, MicrophoneWired
+    NSArray *availInputs = [[AVAudioSession sharedInstance] availableInputs];
+    int count = [availInputs count];
+    for (int k = 0; k < count; k++) {
+        AVAudioSessionPortDescription *portDesc = [availInputs objectAtIndex:k];
+        NSLog(@"input%i port type %@", k+1, portDesc.portType);
+        NSLog(@"input%i port name %@", k+1, portDesc.portName);
+    }
+}
+
+/**
+ IOS 6.x
+ **/
+
+- (void)myRouteChangeSelector:(NSNotification*)notification
+{
+    AVAudioSessionRouteDescription *currentRoute = [[AVAudioSession sharedInstance] currentRoute];
+    NSArray *inputsForRoute = currentRoute.inputs;
+    NSArray *outputsForRoute = currentRoute.outputs;
+    AVAudioSessionPortDescription *outPortDesc = [outputsForRoute objectAtIndex:0];
+    NSLog(@"current outport type %@", outPortDesc.portType);
+    AVAudioSessionPortDescription *inPortDesc = [inputsForRoute objectAtIndex:0];
+    NSString *newPortName = inPortDesc.portName;
+    NSLog(@"current inPort type %@", inPortDesc.portType);
+    NSLog(@"current inPort name %@", newPortName);
+    
+    
+    if([newPortName  isEqual: @"My Car"]) //TODO change name to be the appropriate name
     {
-        NSLog(@"You have clicked GOO");
+        carAudioActivated = true;
+        // flush all states - if another thread is active it will exit.
+        [self.history flush];
+        self.history.state = @"DRIVING_BLUETOOTH";
+    }
+    
+    else if ([self.history.state  isEqual: @"DRIVING_BLUETOOTH"])
+    {
+        carAudioActivated = false;
+        self.history.state = @"IDLE";
+        self.watchNotificationThread = [[NSThread alloc] initWithTarget:[WatchNotificationAgent class] selector:@selector(NotificationAgentExec:) object:self.arr];
+        [self.watchNotificationThread start];
+        
     }
 }
 

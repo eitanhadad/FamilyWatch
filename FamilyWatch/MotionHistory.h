@@ -18,6 +18,7 @@
 - (id) init;
 - (BOOL) isSpeedChanged;
 - (void) addMotion:(double)speed;
+- (void) flush;
 
 
 @end

@@ -63,6 +63,13 @@ static NSString* IDLE = @"IDLE";
     
 }
 
+- (void) flush
+{
+    _historyArray = [[NSMutableArray alloc] init];
+    self.state = nil;
+    
+}
+
 
 
 

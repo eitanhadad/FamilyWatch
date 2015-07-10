@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 
+
 @interface AppDelegate ()
 
 @end
@@ -32,9 +33,10 @@
     }
     
     [self.window makeKeyAndVisible];
+    [self prepareAudioSession];
     
     NSError *error = NULL;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
+ /**   AVAudioSession *session = [AVAudioSession sharedInstance];
     [session setCategory:AVAudioSessionCategoryPlayback error:&error];
     if(error) {
         // Do some error handling
@@ -42,7 +44,7 @@
     [session setActive:YES error:&error];
     if (error) {
         // Do some error handling
-    }
+    } **/
 
     
     
@@ -51,6 +53,34 @@
     // Override point for customization after application launch.
     return YES;
 }
+
+/**
+ Prepare Audio Session
+ **/
+
+- (BOOL)prepareAudioSession {
+    
+    // deactivate session
+    BOOL success = [[AVAudioSession sharedInstance] setActive:NO error: nil];
+    if (!success) {
+        NSLog(@"deactivationError");
+    }
+    
+    // set audio session category AVAudioSessionCategoryPlayAndRecord options AVAudioSessionCategoryOptionAllowBluetooth
+    success = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionAllowBluetooth error:nil];
+    if (!success) {
+        NSLog(@"setCategoryError");
+    }
+    
+    // activate audio session
+    success = [[AVAudioSession sharedInstance] setActive:YES error: nil];
+    if (!success) {
+        NSLog(@"activationError");
+    }
+    return success;
+}
+
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -86,11 +116,23 @@
 
 - (void)showAlarm:(NSString *)text {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alarm"
-                                                        message:text delegate:nil
+                                                        message:text
+                                                       delegate:self
                                               cancelButtonTitle:@"Ignore"
                                               otherButtonTitles:@"Thank You", nil];
     [alertView show];
     
+}
+
+
+- (void)alertView:(UIAlertView *)alertView
+clickedButtonAtIndex:(NSInteger) buttonIndex{
+    
+    if (buttonIndex == 1) { //Thank You
+        // Do it!
+    } else { //0 Ignore
+        // Cancel
+    }
 }
 
 @end
