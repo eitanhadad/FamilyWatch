@@ -14,26 +14,15 @@
 
 @implementation ConfigAttributesViewController
 
-@synthesize settingLabel;
-@synthesize sectionName;
+@synthesize languageText;
+@synthesize carBlueToothNameText;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // currently attributes will be updated statically
-    
-    if ([sectionName  isEqual: @"Language"]) {
-        settingLabel.text = @"Language";
-    }
-    else
-    {
-        if ([sectionName  isEqual: @"Bluetooth"])
-        {
-            settingLabel.text = @"BlueTooth Name";
-        }
-    }
-}
+    //languageText.text = @"Default";
     // Do any additional setup after loading the view.
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

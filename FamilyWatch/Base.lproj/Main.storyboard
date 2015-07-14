@@ -52,42 +52,7 @@
             </objects>
             <point key="canvasLocation" x="1235" y="-789"/>
         </scene>
-        <!--FRW Configuration-->
-        <scene sceneID="jSV-k3-n8G">
-            <objects>
-                <tableViewController id="f4U-TR-6xg" customClass="SettingsTableTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="jSB-1k-1GW">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="sectionIndexColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="sectionIndexBackgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="SettingsCell" id="jG3-4I-8kU">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jG3-4I-8kU" id="ptU-nz-zJf">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <segue destination="maN-ee-7dZ" kind="show" identifier="ShowSettingsAttributes" id="khP-Py-adt"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="f4U-TR-6xg" id="2fl-Hm-qmN"/>
-                            <outlet property="delegate" destination="f4U-TR-6xg" id="AKQ-gg-8jB"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="FRW Configuration" id="ZdG-wM-l6M"/>
-                    <connections>
-                        <outlet property="tableView" destination="jSB-1k-1GW" id="i3I-ar-PmB"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L4U-KP-QR3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1235" y="189"/>
-        </scene>
-        <!--FRW Settings-->
+        <!--Settings-->
         <scene sceneID="Yqd-EN-VIa">
             <objects>
                 <viewController id="maN-ee-7dZ" customClass="ConfigAttributesViewController" sceneMemberID="viewController">
@@ -99,28 +64,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z3w-39-qSl">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Language" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z3w-39-qSl">
                                 <rect key="frame" x="14" y="95" width="101" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Car BT Device Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OPy-rf-pUF">
+                                <rect key="frame" x="14" y="151" width="216" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="JBV-eU-MAp">
+                                <rect key="frame" x="172" y="143" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gvj-hw-j5c">
-                                <rect key="frame" x="127" y="91" width="97" height="30"/>
+                                <rect key="frame" x="172" y="87" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="FRW Settings" id="Lcz-9Q-he4"/>
+                    <navigationItem key="navigationItem" title="Settings" id="Lcz-9Q-he4"/>
                     <connections>
-                        <outlet property="settingLabel" destination="z3w-39-qSl" id="xOV-fN-bsS"/>
+                        <outlet property="carBlueToothName" destination="OPy-rf-pUF" id="TwW-AA-dky"/>
+                        <outlet property="carBlueToothNameLabel" destination="OPy-rf-pUF" id="goQ-hC-bS3"/>
+                        <outlet property="carBlueToothNameText" destination="JBV-eU-MAp" id="ZfU-St-XOx"/>
+                        <outlet property="languageLabel" destination="z3w-39-qSl" id="ETS-ZB-w2t"/>
+                        <outlet property="languageText" destination="gvj-hw-j5c" id="Eg3-e5-abU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H0X-RB-xnq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1938" y="189"/>
+            <point key="canvasLocation" x="1266" y="245"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="C6P-rS-scc">
@@ -134,12 +114,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="f4U-TR-6xg" kind="relationship" relationship="rootViewController" id="Ehg-VW-k9U"/>
+                        <segue destination="maN-ee-7dZ" kind="relationship" relationship="rootViewController" id="N1y-Ii-ShX"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q2T-U8-CPh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="258" y="189"/>
+            <point key="canvasLocation" x="242" y="229"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="LdP-Od-fbI">
@@ -174,7 +154,6 @@
                     </tabBar>
                     <connections>
                         <segue destination="Jbt-h8-E1P" kind="relationship" relationship="viewControllers" id="oTb-HX-p1S"/>
-                        <segue destination="5Jq-Nh-A5q" kind="relationship" relationship="viewControllers" id="eIM-R3-Ygv"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ggO-iE-SkH" userLabel="First Responder" sceneMemberID="firstResponder"/>

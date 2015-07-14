@@ -74,7 +74,7 @@ static BOOL *carAudioActivated;
     self.synthesizer = [[AVSpeechSynthesizer alloc] init];
     
     [self.locationManager startUpdatingLocation];
-  //  [self listAvailableInputs];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -296,6 +296,7 @@ static BOOL *carAudioActivated;
         // flush all states - if another thread is active it will exit.
         [self.history flush];
         self.history.state = @"DRIVING_BLUETOOTH";
+        [self makeSoundAlert: @"FamilyRideWatch detected audio port blutooth named my car " speechRate:0.05];
     }
     
     else if ([self.history.state  isEqual: @"DRIVING_BLUETOOTH"])

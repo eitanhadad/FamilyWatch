@@ -36,20 +36,6 @@
     [self prepareAudioSession];
     
     NSError *error = NULL;
- /**   AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayback error:&error];
-    if(error) {
-        // Do some error handling
-    }
-    [session setActive:YES error:&error];
-    if (error) {
-        // Do some error handling
-    } **/
-
-    
-    
-    
-    
     // Override point for customization after application launch.
     return YES;
 }
