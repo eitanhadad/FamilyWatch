@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "FamilyWatchDataObject.h"
+#import "AppDelegateProtocol.h"
 
 static BOOL *carAudioActivated;
 
@@ -23,6 +25,21 @@ static BOOL *carAudioActivated;
 @implementation ViewController
 
 
+/**
+ Implementation of the AppDelegateProtocol
+ **/
+
+
+- (FamilyWatchDataObject*) theAppDataObject;
+{
+    id<AppDelegateProtocol> theDelegate = (id<AppDelegateProtocol>) [UIApplication sharedApplication].delegate;
+    FamilyWatchDataObject* theDataObject;
+    theDataObject = (FamilyWatchDataObject*) theDelegate.theAppDataObject;
+    return theDataObject;
+}
+
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     carAudioActivated = false;
@@ -30,7 +47,7 @@ static BOOL *carAudioActivated;
     self.locationManager = [[CLLocationManager alloc] init];
     
     self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    // Code to check if the app can respond to the new selector found in iOS 8. If so, request it.
+    // Check if the app can respond to the new selector found in iOS 8. If so, request it.
     if([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
         [self.locationManager requestAlwaysAuthorization];
         // Or [self.locationManager requestWhenInUseAuthorization];
@@ -69,12 +86,16 @@ static BOOL *carAudioActivated;
     _arr = [[NSMutableArray alloc] init];
     [self.arr addObject:self];
     
+    FamilyWatchDataObject* theDataObject = [self theAppDataObject];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
-    _history = [[MotionHistory alloc] init];
+    self.history = theDataObject.history;
+    theDataObject.language = [prefs stringForKey:@"language"];
+    theDataObject.audioDeviceName = [prefs stringForKey:@"audioDeviceName"];
+    
     self.synthesizer = [[AVSpeechSynthesizer alloc] init];
-    
     [self.locationManager startUpdatingLocation];
-  //  [self listAvailableInputs];
+  
 }
 
 - (void)didReceiveMemoryWarning {
@@ -154,7 +175,7 @@ static BOOL *carAudioActivated;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self makeSoundAlert: @"FamilyRideWatch is now online" speechRate:0.05];
+    //[self makeSoundAlert: @"FamilyRideWatch is now online" speechRate:0.05];
 }
 
 
@@ -238,6 +259,7 @@ static BOOL *carAudioActivated;
 
 **/
 
+
 - (id)init
 {
     self = [super init];
@@ -247,6 +269,7 @@ static BOOL *carAudioActivated;
                                                  selector:@selector(myInterruptionSelector:)
                                                      name:AVAudioSessionInterruptionNotification
                                                    object:nil];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(myRouteChangeSelector:)
                                                      name:AVAudioSessionRouteChangeNotification
@@ -261,16 +284,20 @@ static BOOL *carAudioActivated;
  IOS 7.x +
  **/
 
-- (void)listAvailableInputs
+- (BOOL)checkAvailableInputsForPortName:(NSString*)portName
 {
     // portDesc.portType could be for example - BluetoothHFP, MicrophoneBuiltIn, MicrophoneWired
     NSArray *availInputs = [[AVAudioSession sharedInstance] availableInputs];
+    
     int count = [availInputs count];
     for (int k = 0; k < count; k++) {
         AVAudioSessionPortDescription *portDesc = [availInputs objectAtIndex:k];
-        NSLog(@"input%i port type %@", k+1, portDesc.portType);
-        NSLog(@"input%i port name %@", k+1, portDesc.portName);
+        if([portDesc.portName  isEqual: portName])
+            return true;
+        //NSLog(@"input%i port type %@", k+1, portDesc.portType);
+        //NSLog(@"input%i port name %@", k+1, portDesc.portName);
     }
+    return false;
 }
 
 /**
@@ -290,7 +317,11 @@ static BOOL *carAudioActivated;
     NSLog(@"current inPort name %@", newPortName);
     
     
-    if([newPortName  isEqual: @"My Car"]) //TODO change name to be the appropriate name
+    FamilyWatchDataObject* theDataObject = [self theAppDataObject];
+    NSString* settingsPortName = theDataObject.audioDeviceName;
+    
+    
+    if([newPortName  isEqual: settingsPortName ])
     {
         carAudioActivated = true;
         // flush all states - if another thread is active it will exit.
@@ -300,12 +331,21 @@ static BOOL *carAudioActivated;
     
     else if ([self.history.state  isEqual: @"DRIVING_BLUETOOTH"])
     {
-        carAudioActivated = false;
-        self.history.state = @"IDLE";
-        self.watchNotificationThread = [[NSThread alloc] initWithTarget:[WatchNotificationAgent class] selector:@selector(NotificationAgentExec:) object:self.arr];
-        [self.watchNotificationThread start];
-        
+        if (![self checkAvailableInputsForPortName:settingsPortName]) {
+            carAudioActivated = false;
+            self.history.state = @"IDLE";
+            self.watchNotificationThread = [[NSThread alloc] initWithTarget:[WatchNotificationAgent class] selector:@selector(NotificationAgentExec:) object:self.arr];
+            [self.watchNotificationThread start];
+        }
     }
+}
+
+
+
+- (void)myInterruptionSelector:(NSNotification*)notification
+{
+    return;
+    
 }
 
 @end

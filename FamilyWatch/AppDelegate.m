@@ -16,11 +16,17 @@
 @implementation AppDelegate
 
 
+
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     
     
     UILocalNotification *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    
+    // use vibrant when alarm is shown
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     
     if (notification) {
         [self showAlarm:notification.alertBody];
@@ -35,21 +41,13 @@
     [self.window makeKeyAndVisible];
     [self prepareAudioSession];
     
-    NSError *error = NULL;
- /**   AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayback error:&error];
-    if(error) {
-        // Do some error handling
-    }
-    [session setActive:YES error:&error];
-    if (error) {
-        // Do some error handling
-    } **/
+    //instantiating a history object
+    self.history = [[MotionHistory alloc] init];
+    //instantiating a FamilyWatchDataObject object
+    self.theAppDataObject = [[FamilyWatchDataObject alloc] init];
+    //attaching the FamilyWatchDataObject object with the history object
+    self.theAppDataObject.history = self.history;
 
-    
-    
-    
-    
     // Override point for customization after application launch.
     return YES;
 }
@@ -118,7 +116,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alarm"
                                                         message:text
                                                        delegate:self
-                                              cancelButtonTitle:@"Ignore"
+                                              cancelButtonTitle:@"Ignore Alarm"
                                               otherButtonTitles:@"Thank You", nil];
     [alertView show];
     
@@ -129,9 +127,9 @@
 clickedButtonAtIndex:(NSInteger) buttonIndex{
     
     if (buttonIndex == 1) { //Thank You
-        // Do it!
+        self.theAppDataObject.history.state = @"MARKED_THANK_YOU";
     } else { //0 Ignore
-        // Cancel
+        self.theAppDataObject.history.state = @"MARKED_IGNORE";
     }
 }
 

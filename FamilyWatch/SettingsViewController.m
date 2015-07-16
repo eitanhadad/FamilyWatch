@@ -8,11 +8,16 @@
 
 #import "SettingsViewController.h"
 
+
 @interface SettingsViewController ()
 
 @end
 
 @implementation SettingsViewController
+
+
+
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,7 +45,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self performSegueWithIdentifier:@"SettingsCell" sender:indexPath];
+    //[self performSegueWithIdentifier:@"SettingsCell" sender:indexPath];
 }
 
 

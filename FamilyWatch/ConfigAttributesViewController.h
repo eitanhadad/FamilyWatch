@@ -12,6 +12,10 @@
 @interface ConfigAttributesViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UILabel *settingLabel;
+@property (strong, nonatomic) IBOutlet UITextField *languageLabel;
 @property (nonatomic, strong) NSString *sectionName;
+@property (strong, nonatomic) IBOutlet UITextField *languageValue;
+@property (strong, nonatomic) IBOutlet UILabel *carBlueToothDeviceLabel;
+@property (strong, nonatomic) IBOutlet UITextField *carBlueToothDeviceValue;
 
 @end

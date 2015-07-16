@@ -10,6 +10,7 @@
 
 @interface SettingsTableTableViewController ()
 
+
 @end
 
 @implementation SettingsTableTableViewController
@@ -118,6 +119,7 @@ NSArray *settings;
      ConfigAttributesViewController *destViewController = segue.destinationViewController;
      destViewController.sectionName = [settings objectAtIndex:indexPath.row];
  }
+
 }
 
 
